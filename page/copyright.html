@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://img.asugar.cn/index.css">
-	<link rel="stylesheet" href="https://img.asugar.cn/style.css" type="text/css">
+  	<link rel="stylesheet" href="https://img.asugar.cn/style.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script type="text/javascript" src="https://img.asugar.cn/index.js.下载"></script>
     <title>用户使用协议 - TeaPic</title>
@@ -13,9 +13,22 @@
 <body background="https://api.ixiaowai.cn/api/api.php">
 
     <div id="app">
-  
+        <div class="header" style="margin: 0 auto;">
+          <el-menu
+          :default-active="activeIndex"
+          class="el-menu-demo"
+          mode="horizontal"
+          @select="handleSelect"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b">
+          <el-menu-item index="1"><a href="/user/index.go">图片上传</a></el-menu-item>
+          <el-menu-item index="2"><a href="/user/copyright.go">用户协议</a></el-menu-item>
+          <el-menu-item index="3"><a href="/admin.go">管理后台</a></el-menu-item>
+        </el-menu>
+        </div>
         <div class="title">
-            <h2>TeaPic 用户使用协议</h2>
+            <h2 style="color:cornflowerblue">TeaPic 用户使用协议</h2>
             <el-divider></el-divider>
         </div>
         <div class="content" style="width: 600px; height: 700px; margin-top: 2%; opacity: 0.8;" >
@@ -52,7 +65,8 @@
         el : '#app',
       data() {
         return {
-          activeNames: ['1']
+          activeNames: ['1'],
+          activeIndex: '2'
         };
       },
       methods: {

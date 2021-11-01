@@ -11,6 +11,11 @@ func index(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", nil)
 }
 
+// copyright
+func copyright(c *gin.Context) {
+	c.HTML(http.StatusOK, "copyright.html", nil)
+}
+
 func main() {
 	/**
 	*	Hello TeaPic
@@ -21,22 +26,20 @@ func main() {
 	r := gin.Default()
 
 	// Resource Loading
-	r.LoadHTMLFiles("./index.html")
+	r.LoadHTMLGlob("page/*")
 
 	// 404 Handler
 	r.NoRoute(func(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"msg": "TeaPic 404."}) })
 
 	// HomePage Group
-	HomePage := r.Group("/")
+	HomePage := r.Group("/user/")
 	{
-		HomePage.GET("", index)
-		HomePage.GET("index", index)
-		HomePage.GET("index.html", index)
-		HomePage.GET("index.php", index)
+		// index
 		HomePage.GET("index.go", index)
-	}
 
-	
+		// copyright
+		HomePage.GET("copyright.go", copyright)
+	}
 
 	r.Run()
 }
