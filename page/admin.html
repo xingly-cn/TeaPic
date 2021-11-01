@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://img.asugar.cn/style.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script type="text/javascript" src="https://img.asugar.cn/index.js.下载"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>管理后台 - TeaPic</title>
 </head>
 <body background="https://api.ixiaowai.cn/api/api.php">
@@ -26,6 +27,18 @@
             <el-menu-item index="3"><a href="/admin/index.go">管理后台</a></el-menu-item>
           </el-menu>
           </div>
+          
+          <div class="content" style="width: 400px;">
+            <div class="title"><h2>管理员登陆</h2></div>
+            <form action="/admin/main.go" method="get">
+              <el-input id="username" v-model="login.username" placeholder="请输入账号" clearable></el-input>
+              <el-input id="password" v-model="login.password" placeholder="请输入密码" clearable show-password></el-input>
+              <el-row>
+                <el-button @click="submitForm(login)" type="primary" plain style="width: 120px;">登陆</el-button>
+                <el-button type="success" plain style="width: 120px;">工具箱</el-button>
+              </el-row>
+            </form>
+          </div>
     </div>
     
 </body>
@@ -35,12 +48,18 @@
       data() {
         return {
           activeNames: ['1'],
-          activeIndex: '3'
+          activeIndex: '3',
+          login: {
+            username: '',
+            password: ''
+          }
         };
       },
       methods: {
-        handleChange(val) {
-          console.log(val);
+        submitForm(formName) {
+          axios.get("/admin/main.go").then(function(res){
+            alert(res.data.msg)
+					})
         }
       }
     })
