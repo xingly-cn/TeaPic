@@ -6,9 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// index
-func index(c *gin.Context) {
+// Homeindex
+func HomeIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", nil)
+}
+
+func AdminIndex(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin.html", nil)
 }
 
 // copyright
@@ -34,11 +38,14 @@ func main() {
 	// HomePage Group
 	HomePage := r.Group("/user/")
 	{
-		// index
-		HomePage.GET("index.go", index)
-
-		// copyright
+		HomePage.GET("index.go", HomeIndex)
 		HomePage.GET("copyright.go", copyright)
+	}
+
+	// AdminPage Group
+	AdminPage := r.Group("/admin/")
+	{
+		AdminPage.GET("index.go", AdminIndex)
 	}
 
 	r.Run()
