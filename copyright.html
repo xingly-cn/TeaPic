@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://img.asugar.cn/index.css">
+	<link rel="stylesheet" href="https://img.asugar.cn/style.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script type="text/javascript" src="https://img.asugar.cn/index.js.下载"></script>
+    <title>用户使用协议 - TeaPic</title>
+</head>
+<body background="https://api.ixiaowai.cn/api/api.php">
+
+    <div id="app">
+  
+        <div class="title">
+            <h2>TeaPic 用户使用协议</h2>
+            <el-divider></el-divider>
+        </div>
+        <div class="content" style="width: 600px; height: 700px; margin-top: 2%; opacity: 0.8;" >
+            <br></br>
+            <el-collapse  v-model="activeNames" @change="handleChange">
+                <el-collapse-item title="①介绍 Information" name="1">
+                  <div>TeaPic诞生于2021年12月，是一款开源的图片管理系统（简称图床），使用Go + Vue开发，您可以自行部署，也可使用https://pic.xingly.cn/ 提供的在线服务，但需遵守以下协议。</div>
+                  
+                </el-collapse-item>
+                <el-collapse-item title="②提供服务 Offer" name="2">
+                  <li>不得上传色情、暴力、政治等内容;</li>
+                  <li>不得上传侵犯版权、个人隐私权等内容;</li>
+                  <li>违法以上规定直接删除图片不另行通知;</li>
+                  <li>单张图片限制大小为5M，游客限制每天上传10张，图片长期保存;</li>
+                </el-collapse-item>
+                <el-collapse-item title="③功能 Function" name="3">
+                  <li>图片上传与预览</li>
+                  <li>图片压缩</li>
+                  <li>图片智能鉴黄</li>
+                  <li>API支持(暂不对外开放)</li>
+                </el-collapse-item>
+                <el-collapse-item title="④联系我们 Call Us" name="4">
+                  <div>E-mail：xiaoheikeji@vip.qq.com</div>
+                  <div>TeaPic交流群：974338156</div>
+                  <div>最后，感谢你们的支持。</div>
+                </el-collapse-item>
+              </el-collapse>
+        </div>
+    </div>
+    
+</body>
+<script>
+    new Vue ({
+        el : '#app',
+      data() {
+        return {
+          activeNames: ['1']
+        };
+      },
+      methods: {
+        handleChange(val) {
+          console.log(val);
+        }
+      }
+    })
+  </script>
+</html>
