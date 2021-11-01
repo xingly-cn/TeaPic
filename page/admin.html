@@ -30,7 +30,7 @@
           
           <div class="content" style="width: 400px;">
             <div class="title"><h2>管理员登陆</h2></div>
-            <form action="/admin/main.go" method="get">
+            <form>
               <el-input id="username" v-model="login.username" placeholder="请输入账号" clearable></el-input>
               <el-input id="password" v-model="login.password" placeholder="请输入密码" clearable show-password></el-input>
               <el-row>
@@ -57,8 +57,10 @@
       },
       methods: {
         submitForm(formName) {
-          axios.get("/admin/main.go").then(function(res){
-            alert(res.data.msg)
+          var username = this.login.username
+          var passwprd = this.login.password
+          axios.get("/admin/login.go" + "?username=" + username + "&password=" + passwprd).then(function(res){
+            alert(res.data.msg )
 					})
         }
       }
