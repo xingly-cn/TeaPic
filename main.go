@@ -57,6 +57,7 @@ func main() {
 	// HomePage Group
 	HomePage := r.Group("/user/")
 	{
+		// Pages
 		HomePage.GET("index.go", HomeIndex)
 		HomePage.GET("copyright.go", copyright)
 	}
@@ -64,7 +65,9 @@ func main() {
 	// AdminPage Group
 	AdminPage := r.Group("/admin/")
 	{
+		// Page
 		AdminPage.GET("index.go", AdminIndex)
+		// Interface
 		AdminPage.GET("login.go", Login)
 	}
 
