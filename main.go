@@ -11,8 +11,27 @@ func HomeIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", nil)
 }
 
+// AdminIndex
 func AdminIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "admin.html", nil)
+}
+
+// LoginParms
+type LoginParms struct {
+	Username string
+	Password string
+}
+
+// Login
+func Login(c *gin.Context) {
+	var loginParms LoginParms
+	loginParms.Username = c.Query("username")
+	loginParms.Password = c.Query("password")
+
+	//Todo This to judge authority
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "登陆成功",
+	})
 }
 
 // copyright
@@ -46,6 +65,7 @@ func main() {
 	AdminPage := r.Group("/admin/")
 	{
 		AdminPage.GET("index.go", AdminIndex)
+		AdminPage.GET("login.go", Login)
 	}
 
 	r.Run()
