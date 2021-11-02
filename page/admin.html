@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://img.asugar.cn/index.css">
-    <link rel="stylesheet" href="https://img.asugar.cn/style.css" type="text/css">
+    <link rel="stylesheet" href="http://vtool.test.upcdn.net/index.css">
+    <link rel="stylesheet" href="http://vtool.test.upcdn.net/style.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script type="text/javascript" src="https://img.asugar.cn/index.js.下载"></script>
+    <script type="text/javascript" src="http://vtool.test.upcdn.net/index.js.下载"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>管理后台 - TeaPic</title>
 </head>
@@ -30,17 +30,14 @@
           
           <div class="content" style="width: 400px;">
             <div class="title"><h2>管理员登陆</h2></div>
-            <form>
-              <el-input id="username" v-model="login.username" placeholder="请输入账号" clearable></el-input>
-              <el-input id="password" v-model="login.password" placeholder="请输入密码" clearable show-password></el-input>
-              <el-row>
-                <el-button @click="submitForm(login)" type="primary" plain style="width: 120px;">登陆</el-button>
-                <el-button type="success" plain style="width: 120px;">工具箱</el-button>
-              </el-row>
+            <form action="/admin/login.go" method="get" style="text-align: center;">
+              <input v-model="user" type="text" name="username" style="height: 20px;"> </br></br>
+              <input v-model="pwd" type="password" name="password" style="height: 20px;"> </br></br>
+              <input type="submit" value="提交" style="width: 80px;">
+              <span style="width: 88px;" @click="quit()">清空</span>
             </form>
           </div>
     </div>
-    
 </body>
 <script>
     new Vue ({
@@ -49,19 +46,14 @@
         return {
           activeNames: ['1'],
           activeIndex: '3',
-          login: {
-            username: '',
-            password: ''
-          }
+          user: '',
+          pwd: ''
         };
       },
       methods: {
-        submitForm(formName) {
-          var username = this.login.username
-          var passwprd = this.login.password
-          axios.get("/admin/login.go" + "?username=" + username + "&password=" + passwprd).then(function(res){
-            alert(res.data.msg )
-					})
+        quit: function() {
+          this.user = ''
+          this.pwd = ''
         }
       }
     })
