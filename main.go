@@ -39,7 +39,7 @@ func Login(c *gin.Context) {
 
 // UploadConfig
 func UploadConfig() (*oss.Bucket, error) {
-	client, _ := oss.New("https://cdn.xingly.cn/", "LTAI4GK67v43NPGCeundD6wq", "ZdknJ9ZCB3MFM7CJopF7NK4LIds2Dg", oss.UseCname(true), oss.EnableCRC(true))
+	client, _ := oss.New("https://cdn.xingly.cn/", "LTAI4GK67v43NPGCeundD6wq", "RZdknJ9ZCB3MFM7CJopF7NK4LIds2Dg", oss.UseCname(true), oss.EnableCRC(true))
 	bucket, _ := client.Bucket("xingly")
 	return bucket, nil
 }
