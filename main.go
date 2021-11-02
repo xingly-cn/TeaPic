@@ -30,7 +30,7 @@ func Login(c *gin.Context) {
 
 	//Todo This to judge authority
 	c.JSON(http.StatusOK, gin.H{
-		"msg": "登陆成功",
+		"msg": loginParms,
 	})
 }
 
