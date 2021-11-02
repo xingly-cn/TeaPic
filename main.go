@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
+	"io/ioutil"
 	"net/http"
 
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,8 +37,31 @@ func Login(c *gin.Context) {
 	})
 }
 
-// copyright
-func copyright(c *gin.Context) {
+// UploadConfig
+func UploadConfig() (*oss.Bucket, error) {
+	client, _ := oss.New("https://cdn.xingly.cn/", "LTAI4GK67v43NPGCeundD6wq", "ZdknJ9ZCB3MFM7CJopF7NK4LIds2Dg", oss.UseCname(true), oss.EnableCRC(true))
+	bucket, _ := client.Bucket("xingly")
+	return bucket, nil
+}
+
+// Upload
+func Upload(c *gin.Context) {
+	t, _ := UploadConfig()
+	data, _ := c.FormFile("file")
+	UrlPath := "http://cdn.xingly.cn/" + data.Filename
+	dataHander, _ := data.Open()
+	defer dataHander.Close()
+	fileByte, _ := ioutil.ReadAll(dataHander)
+	t.PutObject(data.Filename, bytes.NewReader(fileByte))
+	c.JSON(http.StatusOK, gin.H{
+		"code":  http.StatusOK,
+		"count": 1,
+		"data":  UrlPath,
+	})
+}
+
+// Copyright
+func Copyright(c *gin.Context) {
 	c.HTML(http.StatusOK, "copyright.html", nil)
 }
 
@@ -59,7 +85,9 @@ func main() {
 	{
 		// Pages
 		HomePage.GET("index.go", HomeIndex)
-		HomePage.GET("copyright.go", copyright)
+		HomePage.GET("copyright.go", Copyright)
+		// Interface
+		HomePage.POST("upload.go", Upload)
 	}
 
 	// AdminPage Group
