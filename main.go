@@ -22,15 +22,14 @@ func AdminIndex(c *gin.Context) {
 
 // LoginParms
 type LoginParms struct {
-	Username string
-	Password string
+	Username string `form:"username"`
+	Password string `form:"password"`
 }
 
 // Login
 func Login(c *gin.Context) {
 	var loginParms LoginParms
-	loginParms.Username = c.Query("username")
-	loginParms.Password = c.Query("password")
+	c.ShouldBind(&loginParms)
 
 	//Todo This to judge authority
 	c.JSON(http.StatusOK, gin.H{
@@ -40,7 +39,7 @@ func Login(c *gin.Context) {
 
 // UploadConfig
 func UploadConfig() (*oss.Bucket, error) {
-	client, _ := oss.New("https://cdn.xingly.cn/", "LTAI4GK67v43NPGCeundD6wq", "ZdknJ9ZCB3MFM7CJopF7NK4LIds2Dg", oss.UseCname(true), oss.EnableCRC(true))
+	client, _ := oss.New("https://cdn.xingly.cn/", "LTAI4GK67v43NPGCeundD6wq", "LZdknJ9ZCB3MFM7CJopF7NK4LIds2Dg", oss.UseCname(true), oss.EnableCRC(true))
 	bucket, _ := client.Bucket("xingly")
 	return bucket, nil
 }
@@ -56,7 +55,7 @@ func Upload(c *gin.Context) {
 	fileByte, _ := ioutil.ReadAll(dataHander)
 	t.PutObject(uuid+data.Filename[len(data.Filename)-4:], bytes.NewReader(fileByte))
 	c.JSON(http.StatusOK, gin.H{
-		"name":  data.Filename,
+		"name": data.Filename,
 		"url":  UrlPath,
 	})
 }
