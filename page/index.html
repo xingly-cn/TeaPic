@@ -28,19 +28,20 @@
             <el-menu-item index="3"><a href="/admin/index.go">管理后台</a></el-menu-item>
           </el-menu>
           </div>
-          <div class="content" style="height: 700px;">
+          <div class="content" style="height: 700px;text-align: center;margin-top: 50px;">
             <el-upload
-            style="margin-top: 50px;text-align: center;"
-            class="upload-demo"
-            drag
-            list-type="picture"
-            limit="10"
-            action="/user/upload.go"
-            multiple>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传图片文件，且不超过 5 MB，每次限制 5 张</div>
-          </el-upload>
+              style="margin-top: 50px;"
+              class="upload-demo"
+              ref="upload"
+              action="/user/upload.go"
+              multiple
+              :on-preview="handlePreview"
+              :auto-upload="false">
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
+            
           </div>
     </div>
     
@@ -51,12 +52,22 @@
       data() {
         return {
           activeNames: ['1'],
-          activeIndex: '1'
+          activeIndex: '1',
         };
       },
       methods: {
-        handleChange(val) {
-          console.log(val);
+        submitUpload() {
+          this.$refs.upload.submit();
+        },
+        handlePreview(file) {
+          var name = file.response.name
+          var url = file.response.url
+          this.$alert(url, '请手动复制，功能正在完善', {
+            confirmButtonText: '确定',
+          });
+        },
+        handleSelect(key, keyPath) {
+          console.log(key, keyPath);
         }
       }
     })
