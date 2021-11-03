@@ -29,6 +29,14 @@
           </el-menu>
           </div>
           <div class="content" style="height: 700px;text-align: center;margin-top: 50px;">
+            <el-card class="box-card" style="margin-top: 10px;">
+              <div class="block">
+                <span class="demonstration">滑块验证：向右滑至 100%</span>
+                <el-slider v-model="value"></el-slider>
+              </div>
+              <el-progress :format="on100" :text-inside="true" :stroke-width="24" :percentage="value" status="success" ></el-progress>
+            </el-card>
+            
             <el-upload
               style="margin-top: 50px;"
               class="upload-demo"
@@ -39,7 +47,7 @@
               :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
               <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+              <div slot="tip" class="el-upload__tip">只能上传图片文件，且不超过5MB,<b>点击下方文件复制</b></div>
             </el-upload>
             
           </div>
@@ -53,11 +61,27 @@
         return {
           activeNames: ['1'],
           activeIndex: '1',
+          value : 0
         };
       },
       methods: {
         submitUpload() {
+          var v = this.value
+          if (v != 100) {
+            this.value = 0
+            this.$notify.error({
+              title: '错误',
+              message: '滑块验证失败'
+            });
+            return ;
+          }
+          this.value = 0
           this.$refs.upload.submit();
+          this.$notify({
+            title: '图片上传成功',
+            message: '点击下方文件获取URL',
+            type: 'success'
+          });
         },
         handlePreview(file) {
           var name = file.response.name
@@ -68,6 +92,15 @@
         },
         handleSelect(key, keyPath) {
           console.log(key, keyPath);
+        },
+        on100(percentage) {
+          if (percentage == 100) {
+            this.$notify({
+              title: '成功',
+              message: '滑块验证成功',
+              type: 'success'
+            });
+          }
         }
       }
     })
