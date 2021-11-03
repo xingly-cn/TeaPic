@@ -31,9 +31,9 @@
           <div class="content" style="width: 400px;">
             <div class="title"><h2>管理员登陆</h2></div>
             <form action="/admin/login.go" method="get" style="text-align: center;">
-              <input v-model="user" type="text" name="username" style="height: 20px;"> </br></br>
-              <input v-model="pwd" type="password" name="password" style="height: 20px;"> </br></br>
-              <input type="submit" value="提交" style="width: 80px;">
+              账号：<input v-model="user" type="text" name="username" style="height: 20px;"> </br></br>
+              密码：<input v-model="pwd" type="password" name="password" style="height: 20px;"> </br></br>
+              <input type="submit" value="提交" style="width: 80px;">&nbsp;&nbsp;
               <span style="width: 88px;" @click="quit()">清空</span>
             </form>
           </div>
