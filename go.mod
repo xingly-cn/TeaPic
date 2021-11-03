@@ -29,4 +29,7 @@ require (
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
 )
 
-require golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
+require (
+	github.com/rs/xid v1.3.0
+	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
+)
