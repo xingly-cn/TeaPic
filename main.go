@@ -7,6 +7,7 @@ import (
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/xid"
 )
 
 // Homeindex
@@ -39,7 +40,7 @@ func Login(c *gin.Context) {
 
 // UploadConfig
 func UploadConfig() (*oss.Bucket, error) {
-	client, _ := oss.New("https://cdn.xingly.cn/", "LTAI4GK67v43NPGCeundD6wq", "RZdknJ9ZCB3MFM7CJopF7NK4LIds2Dg", oss.UseCname(true), oss.EnableCRC(true))
+	client, _ := oss.New("https://cdn.xingly.cn/", "LTAI4GK67v43NPGCeundD6wq", "ZdknJ9ZCB3MFM7CJopF7NK4LIds2Dg", oss.UseCname(true), oss.EnableCRC(true))
 	bucket, _ := client.Bucket("xingly")
 	return bucket, nil
 }
@@ -48,15 +49,15 @@ func UploadConfig() (*oss.Bucket, error) {
 func Upload(c *gin.Context) {
 	t, _ := UploadConfig()
 	data, _ := c.FormFile("file")
-	UrlPath := "http://cdn.xingly.cn/" + data.Filename
+	uuid := xid.New().String()
+	UrlPath := "http://cdn.xingly.cn/" + uuid + data.Filename[len(data.Filename)-4:]
 	dataHander, _ := data.Open()
 	defer dataHander.Close()
 	fileByte, _ := ioutil.ReadAll(dataHander)
-	t.PutObject(data.Filename, bytes.NewReader(fileByte))
+	t.PutObject(uuid+data.Filename[len(data.Filename)-4:], bytes.NewReader(fileByte))
 	c.JSON(http.StatusOK, gin.H{
-		"code":  http.StatusOK,
-		"count": 1,
-		"data":  UrlPath,
+		"name":  data.Filename,
+		"url":  UrlPath,
 	})
 }
 
