@@ -27,36 +27,6 @@ func AdminIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "admin.html", nil)
 }
 
-//---------------------------------------登陆接口---------------------------------------------
-
-// LoginParms
-type LoginParms struct {
-	Username string `form:"username"`
-	Password string `form:"password"`
-}
-
-// Login
-func ALogin(c *gin.Context) {
-	var loginParms LoginParms
-	c.ShouldBind(&loginParms)
-
-	user := User{
-		Uuid:     xid.New().String(),
-		Username: loginParms.Username,
-		Password: "Hello Bitch",
-		Phone:    "",  // 查数据库获得
-		Status:   "1", // 查数据库获得
-		Picday:   100,
-	}
-
-	token, _ := jwtGenerateToken(&user, time.Hour*24*365)
-
-	//Todo This to judge authority
-	c.JSON(http.StatusOK, gin.H{
-		"code":  200,
-		"token": token,
-	})
-}
 
 //---------------------------------------配置类---------------------------------------------
 
@@ -73,7 +43,7 @@ func MysqlConfig() (*gorm.DB, error) {
 	return db, err
 }
 
-//---------------------------------------上传接口---------------------------------------------
+//---------------------------------------通用接口---------------------------------------------
 
 // Upload
 func Upload(c *gin.Context) {
@@ -88,6 +58,46 @@ func Upload(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"name": data.Filename,
 		"url":  UrlPath,
+	})
+}
+
+// Jwt-rz
+func Jwt_rz(c *gin.Context) {
+	token := c.Query("token")
+	user, _, _ := JwtParseUser(token)
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"Data": user,
+	})
+}
+
+// LoginParms
+type LoginParms struct {
+	Username string
+	Password string
+}
+
+// Login
+func ALogin(c *gin.Context) {
+	var loginParms LoginParms
+	loginParms.Username = c.Query("username")
+
+	user := User{
+		Uuid:     xid.New().String(),
+		Username: loginParms.Username,
+		Password: "Hello Bitch",
+		Phone:    "",  // 查数据库获得
+		Status:   "1", // 查数据库获得
+		Picday:   100,
+	}
+
+	token, _ := jwtGenerateToken(&user, time.Hour*24*365)
+
+	//Todo This to judge authority
+	c.JSON(http.StatusOK, gin.H{
+		"t": loginParms,
+		"code":  200,
+		"token": token,
 	})
 }
 
@@ -185,6 +195,8 @@ func main() {
 		AdminPage.GET("index.go", AdminIndex)
 		// Interface
 		AdminPage.GET("login.go", ALogin)
+		// Interface
+		AdminPage.GET("jwt-rz", Jwt_rz)
 	}
 	r.Run(":8080")
 }
