@@ -58,7 +58,7 @@
         login: function() {
           // 将token 保存
           var that = this
-          axios.get("/admin/login.go").then(function (res){
+          axios.get("/admin/login.go?" + "username=" + that.user + "&password=" + that.pwd).then(function (res){
             var token = res.data.token
             if (token == null) {
               alert('登陆失败')
