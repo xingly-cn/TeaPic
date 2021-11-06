@@ -30,12 +30,12 @@
           
           <div class="content" style="width: 400px;">
             <div class="title"><h2>管理员登陆</h2></div>
-            <form action="/admin/login.go" method="get" style="text-align: center;">
+            <div style="text-align: center;">
               账号：<input v-model="user" type="text" name="username" style="height: 20px;"> </br></br>
               密码：<input v-model="pwd" type="password" name="password" style="height: 20px;"> </br></br>
-              <input type="submit" value="提交" style="width: 80px;">&nbsp;&nbsp;
-              <span style="width: 88px;" @click="quit()">清空</span>
-            </form>
+              <button style="width: 60px;" @click="login">登陆</button> &nbsp;&nbsp;
+              <span style="width: 66px;" @click="quit()">清空</span>
+            </div>
           </div>
     </div>
 </body>
@@ -54,6 +54,26 @@
         quit: function() {
           this.user = ''
           this.pwd = ''
+        },
+        login: function() {
+          // 将token 保存
+          var that = this
+          axios.get("/admin/login.go").then(function (res){
+            var token = res.data.token
+            if (token == null) {
+              alert('登陆失败')
+            }else {
+              localStorage.setItem("token",token)
+              alert('跳入管理后台')
+            }
+          })
+        },
+      },
+      created: function () {
+        // 登陆拦截
+        var token = localStorage.getItem("token")
+        if (token != null) {
+          alert('跳转管理后台')
         }
       }
     })

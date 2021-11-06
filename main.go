@@ -36,29 +36,26 @@ type LoginParms struct {
 }
 
 // Login
-func Login(c *gin.Context) {
+func ALogin(c *gin.Context) {
+
 	var loginParms LoginParms
 	c.ShouldBind(&loginParms)
 
 	user := User{
 		Uuid:     xid.New().String(),
 		Username: loginParms.Username,
-		Password: loginParms.Password,
-		Phone:    "18895388211",
-		Status:   "1",
+		Password: "Hello Bitch",
+		Phone:    "",  // 查数据库获得
+		Status:   "1", // 查数据库获得
 		Picday:   100,
 	}
 
 	token, _ := jwtGenerateToken(&user, time.Hour*24*365)
 
-	data, expireTime, _ := JwtParseUser(token)
-
 	//Todo This to judge authority
 	c.JSON(http.StatusOK, gin.H{
-		"msg":    loginParms,
-		"token":  token,
-		"user":   data,
-		"expire": expireTime,
+		"code":  200,
+		"token": token,
 	})
 }
 
@@ -188,7 +185,7 @@ func main() {
 		// Page
 		AdminPage.GET("index.go", AdminIndex)
 		// Interface
-		AdminPage.GET("login.go", Login)
+		AdminPage.GET("login.go", ALogin)
 	}
 	r.Run(":8080")
 }
