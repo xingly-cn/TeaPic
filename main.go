@@ -37,7 +37,6 @@ type LoginParms struct {
 
 // Login
 func ALogin(c *gin.Context) {
-
 	var loginParms LoginParms
 	c.ShouldBind(&loginParms)
 

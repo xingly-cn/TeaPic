@@ -67,6 +67,28 @@
       methods: {
         submitUpload() {
           var v = this.value
+          var cur =  parseInt(localStorage.getItem("cur"))
+          var token = localStorage.getItem("token")
+          if (token == null) {
+            if (cur >= 10) {
+              this.$notify.error({
+                title: '错误',
+                message: '未注册用户每日上传限制 10张'
+              });
+              return ;
+            }
+          }else {
+            var that = this
+            axios.get("/admin/jwt-rz?token=" + token).then(function(res){
+              if (cur >= res.data.Data.Picday) {
+                that.$notify.error({
+                  title: '错误',
+                  message: '注册用户每日上传限制 ' + res.data.Data.Picday + "张"
+                });
+              }
+              return ;
+            })
+          }
           if (v != 100) {
             this.value = 0
             this.$notify.error({
@@ -75,6 +97,7 @@
             });
             return ;
           }
+          localStorage.setItem("cur",cur + 1)
           this.value = 0
           this.$refs.upload.submit();
           this.$notify({
@@ -101,6 +124,12 @@
               type: 'success'
             });
           }
+        }
+      },
+      created: function () {
+        // 每日上传限制
+        if (localStorage.getItem("cur") == null) {
+          localStorage.setItem("cur",0) 
         }
       }
     })
