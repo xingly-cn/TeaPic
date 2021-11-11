@@ -1,12 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="http://vtool.test.upcdn.net/index.css">
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="http://vtool.test.upcdn.net/style.css" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script type="text/javascript" src="http://vtool.test.upcdn.net/index.js.下载"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <title>TeaPic - 用户后台</title>
 </head>
-<body>
+<body background="https://api.ixiaowai.cn/api/api.php">
+    <div id="app">
+        <div class="header" style="margin: 0 auto;">
+            <el-menu
+            :default-active="activeIndex"
+            class="el-menu-demo"
+            mode="horizontal"
+            @select="handleSelect"
+            background-color="#545c64"
+            text-color="#fff"
+            active-text-color="#ffd04b">
+            <el-menu-item index="1"><a href="/user/index.go">图片管理</a></el-menu-item>
+            <el-menu-item index="3"><p @click="quit">退出登陆</p></el-menu-item>
+            
+          </el-menu>
+          </div>
+         
+    </div>
     
 </body>
+<script>
+    var app = new Vue ({
+        delimiters: ['${','}'],
+        el : '#app',
+        data : {
+            message : '1'
+        },
+        methods: {
+            quit() {
+                localStorage.removeItem("token")
+                location.reload();
+            }
+        },
+        created: function () {
+            // 登陆拦截
+            var token = localStorage.getItem("token")
+            if (token == null) {
+                window.location.replace("/user/admin.go");
+            }
+        }
+    })
+</script>
 </html>
