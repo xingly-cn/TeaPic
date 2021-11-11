@@ -1,12 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="http://vtool.test.upcdn.net/index.css">
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="http://vtool.test.upcdn.net/style.css" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script type="text/javascript" src="http://vtool.test.upcdn.net/index.js.下载"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <title>TeaPic - 管理员后台</title>
 </head>
-<body>
+<body background="https://api.ixiaowai.cn/api/api.php">
+    <div id="app">
+        <div class="header" style="margin: 0 auto;">
+            <el-menu
+            :default-active="activeIndex"
+            class="el-menu-demo"
+            mode="horizontal"
+            background-color="#545c64"
+            text-color="#fff"
+            active-text-color="#ffd04b">
+            <el-menu-item index="1"><a href="/user/index.go">图片管理</a></el-menu-item>
+            <el-menu-item index="2"><a href="/user/copyright.go">用户管理</a></el-menu-item>
+            <el-menu-item index="3"><p @click="quit">退出登陆</p></el-menu-item>
+            </el-menu>
+        </div>
+        <h1 style="text-align: center;">共计：${nums} 张图片  用户：${name}  等级：${level}</h1>
+        <div class="main" style="height: 100%; width: 90%; opacity: 0.9; margin-top: 2%; margin-left: 2%;">
+            <el-table
+            :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+            style="width: 100%;text-align: center;">
+            <el-table-column
+            label="Uid"
+            prop="uid">
+            </el-table-column>
+            <el-table-column
+            label="名字"
+            prop="name">
+            </el-table-column>
+            <el-table-column
+            label="大小"
+            prop="size">
+            </el-table-column>
+            <el-table-column
+            label="时间"
+            prop="time">
+            </el-table-column>
+            <el-table-column
+            align="right">
+            <template slot="header" slot-scope="scope">
+                <br>
+                <el-input
+                v-model="search"
+                size="mini"
+                placeholder="输入关键字搜索"/>
+            </template>
+            <template slot-scope="scope">
+                <el-button
+                size="mini"
+                type="success"
+                @click="handleView(scope.$index, scope.row)">预览</el-button>
+                <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+            </el-table-column>
+            
+        </el-table>
+        </div>
+         
+    </div>
     
 </body>
+<script>
+    var app = new Vue ({
+        delimiters: ['${','}'],
+        el : '#app',
+        data : {
+            activeIndex: '1',
+            tableData: [],
+            search: '',
+            name: '',
+            level: '',
+            nums: 0
+        },
+        methods: {
+            quit() {
+                localStorage.removeItem("token")
+                location.reload();
+            },
+            handleDelete(index, row) {
+                var name = this.tableData[index].name
+                var that = this
+                axios.get("/admin/delPic?name=" + name).then(function(res){
+                    if(res.data.code == 200) {
+                        that.$notify({
+                            title: '通知',
+                            message: res.data.msg
+                        });
+                    }else {
+                        that.$notify.error({
+                            title: '错误',
+                            message: res.data.msg
+                        });
+                    }
+                    location.reload();
+                })
+            },
+            handleView(index, row) {
+                this.$alert('<img width=100% src="http://cdn.xingly.cn/' + this.tableData[index].name + '">', '预览' + this.tableData[index].name, {
+                    dangerouslyUseHTMLString: true
+                });
+            }
+        },
+        created: function () {
+            // 登陆拦截
+            var token = localStorage.getItem("token")
+            if (token == null) {
+                window.location.replace("/admin/index.go");
+            }
+
+            // 获取信息
+            var token = localStorage.getItem("token")
+            var that = this
+            axios.get("/admin/listPic?token=" + token).then(function(res){
+                that.tableData = res.data.data
+                that.nums = res.data.count
+                that.name = res.data.user.Username
+                that.level = res.data.user.Status
+            })
+        }
+    })
+</script>
 </html>
