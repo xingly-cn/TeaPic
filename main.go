@@ -5,6 +5,8 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+
 	"time"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -32,6 +34,16 @@ func UserAdmin(c *gin.Context) {
 	c.HTML(http.StatusOK, "user.html", nil)
 }
 
+// UserBoard
+func UserBoard(c *gin.Context) {
+	c.HTML(http.StatusOK, "userBoard.html", nil)
+}
+
+// AdminBoard
+func AdminBoard(c *gin.Context) {
+	c.HTML(http.StatusOK, "adminBoard.html", nil)
+}
+
 //---------------------------------------配置类---------------------------------------------
 
 // UploadConfig
@@ -48,6 +60,63 @@ func MysqlConfig() (*gorm.DB, error) {
 }
 
 //---------------------------------------通用接口---------------------------------------------
+
+// listPic
+func listPic(c *gin.Context) {
+	// 判断是否有权限
+	token := c.Query("token")
+	user, _, _ := JwtParseUser(token)
+	Auth := ""
+	if user == nil {
+		c.JSON(http.StatusOK, nil)
+		return
+	} else {
+		if user.Status == "0" {
+			Auth = user.Username
+		} else if user.Status == "2" {
+			c.JSON(http.StatusOK, nil)
+			return
+		}
+	}
+	// 获取图片信息并封装
+	t, _ := UploadConfig()
+	files, _ := t.ListObjects(oss.Prefix(Auth), oss.MaxKeys(1000))
+	count := len(files.Objects)
+	picData := []map[string]string{}
+	for i := 0; i < count; i++ {
+		temp := map[string]string{
+			"uid":  strconv.Itoa(i + 1),
+			"name": files.Objects[i].Key,
+			"size": strconv.FormatInt(files.Objects[i].Size, 10),
+			"time": files.Objects[i].LastModified.Format("2006-01-02 15:04:05"),
+		}
+		picData = append(picData, temp)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code":  200,
+		"count": count,
+		"data":  picData,
+		"user":  user,
+	})
+}
+
+// delPic
+func delPic(c *gin.Context) {
+	file := c.Query("name")
+	t, _ := UploadConfig()
+	err := t.DeleteObject(file)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": 500,
+			"msg":  err,
+		})
+		return 
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "删除[" + file + "]成功",
+	})
+}
 
 // Upload
 func Upload(c *gin.Context) {
@@ -188,7 +257,9 @@ func main() {
 		// Pages
 		HomePage.GET("index.go", HomeIndex)
 		HomePage.GET("copyright.go", Copyright)
-		HomePage.GET(("admin.go"), UserAdmin)
+		HomePage.GET("admin.go", UserAdmin)
+		HomePage.GET("userBoard.go", UserBoard)
+		HomePage.GET("adminBoard.go", AdminBoard)
 		// Interface
 		HomePage.POST("upload.go", Upload)
 	}
@@ -202,6 +273,10 @@ func main() {
 		AdminPage.GET("login.go", ALogin)
 		// Interface
 		AdminPage.GET("jwt-rz", Jwt_rz)
+		// Interface
+		AdminPage.GET("listPic", listPic)
+		// Interface
+		AdminPage.GET("delPic", delPic)
 	}
 	r.Run(":8080")
 }
