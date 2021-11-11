@@ -27,6 +27,10 @@ func AdminIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "admin.html", nil)
 }
 
+// UserAdmin
+func UserAdmin(c *gin.Context) {
+	c.HTML(http.StatusOK, "user.html", nil)
+}
 
 //---------------------------------------配置类---------------------------------------------
 
@@ -95,7 +99,7 @@ func ALogin(c *gin.Context) {
 
 	//Todo This to judge authority
 	c.JSON(http.StatusOK, gin.H{
-		"t": loginParms,
+		"t":     loginParms,
 		"code":  200,
 		"token": token,
 	})
@@ -184,6 +188,7 @@ func main() {
 		// Pages
 		HomePage.GET("index.go", HomeIndex)
 		HomePage.GET("copyright.go", Copyright)
+		HomePage.GET(("admin.go"), UserAdmin)
 		// Interface
 		HomePage.POST("upload.go", Upload)
 	}
