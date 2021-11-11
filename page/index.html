@@ -26,6 +26,7 @@
             <el-menu-item index="1"><a href="/user/index.go">图片上传</a></el-menu-item>
             <el-menu-item index="2"><a href="/user/copyright.go">用户协议</a></el-menu-item>
             <el-menu-item index="3"><a href="/admin/index.go">管理后台</a></el-menu-item>
+            <el-menu-item index="4"><a href="/user/admin.go">用户后台</a></el-menu-item>
           </el-menu>
           </div>
           <div class="content" style="height: 700px;text-align: center;margin-top: 50px;">
@@ -61,7 +62,8 @@
         return {
           activeNames: ['1'],
           activeIndex: '1',
-          value : 0
+          value : 0,
+          te : 100
         };
       },
       methods: {
@@ -80,15 +82,17 @@
           }else {
             var that = this
             axios.get("/admin/jwt-rz?token=" + token).then(function(res){
-              if (cur >= res.data.Data.Picday) {
-                that.$notify.error({
-                  title: '错误',
-                  message: '注册用户每日上传限制 ' + res.data.Data.Picday + "张"
-                });
-              }
-              return ;
+              that.te = parseInt(res.data.Data.Picday)
             })
+            if (cur >= that.te) {
+              that.$notify.error({
+                title: '错误',
+                message: '注册用户每日上传限制 ' + that.te + "张"
+              });
+              return ;
+            }
           }
+          
           if (v != 100) {
             this.value = 0
             this.$notify.error({
