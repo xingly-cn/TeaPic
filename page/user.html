@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script type="text/javascript" src="http://vtool.test.upcdn.net/index.js.下载"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <title>管理后台 - TeaPic</title>
+    <title>用户后台 - TeaPic</title>
 </head>
 <body background="https://api.ixiaowai.cn/api/api.php">
     <div id="app">
@@ -30,7 +30,7 @@
           </div>
           
           <div class="content" style="width: 400px;">
-            <div class="title"><h2>管理员登陆</h2></div>
+            <div class="title"><h2>用户登陆</h2></div>
             <div style="text-align: center;">
               账号：<input v-model="user" type="text" name="username" style="height: 20px;"> </br></br>
               密码：<input v-model="pwd" type="password" name="password" style="height: 20px;"> </br></br>
@@ -46,7 +46,7 @@
       data() {
         return {
           activeNames: ['1'],
-          activeIndex: '3',
+          activeIndex: '4',
           user: '',
           pwd: ''
         };
