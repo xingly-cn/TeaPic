@@ -65,7 +65,7 @@
               alert('登陆失败')
             }else {
               localStorage.setItem("token",token)
-              alert('跳入管理后台')
+              window.location.replace("/user/adminBoard.go");
             }
           })
         },
@@ -74,7 +74,7 @@
         // 登陆拦截
         var token = localStorage.getItem("token")
         if (token != null) {
-          alert('跳转管理后台')
+          window.location.replace("/user/adminBoard.go");
         }
       }
     })
