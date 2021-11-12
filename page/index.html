@@ -52,6 +52,7 @@
             </el-upload>
             
           </div>
+          <input type="text" id="wdnmd" style="margin-left: -1000px;">
     </div>
     
 </body>
@@ -111,10 +112,15 @@
           });
         },
         handlePreview(file) {
-          var name = file.response.name
           var url = file.response.url
-          this.$alert(url, '请手动复制，功能正在完善', {
-            confirmButtonText: '确定',
+          // 复制URL实现
+          const input = document.getElementById('wdnmd')
+          input.setAttribute('value',url)
+          input.select()
+          document.execCommand('copy')
+          // 预览弹窗
+          this.$alert('<img width=100% src="' + url +   '"><p>' + url + '</p>', '已自动复制至剪切板', {
+            dangerouslyUseHTMLString: true
           });
         },
         handleSelect(key, keyPath) {
