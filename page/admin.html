@@ -62,7 +62,10 @@
           axios.get("/admin/login.go?" + "username=" + that.user + "&password=" + that.pwd).then(function (res){
             var token = res.data.token
             if (token == null) {
-              alert('登陆失败')
+              that.$notify.error({
+                title: '错误',
+                message: '账号或密码错误'
+              });
             }else {
               localStorage.setItem("token",token)
               window.location.replace("/user/adminBoard.go");
