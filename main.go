@@ -110,7 +110,7 @@ func delPic(c *gin.Context) {
 			"code": 500,
 			"msg":  err,
 		})
-		return 
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
@@ -154,21 +154,26 @@ type LoginParms struct {
 func ALogin(c *gin.Context) {
 	var loginParms LoginParms
 	loginParms.Username = c.Query("username")
+	loginParms.Password = c.Query("password")
 
-	user := User{
-		Uuid:     xid.New().String(),
-		Username: loginParms.Username,
-		Password: "Hello Bitch",
-		Phone:    "",  // 查数据库获得
-		Status:   "1", // 查数据库获得
-		Picday:   100,
+	// 登陆验证 - From 数据库
+	user := User{}
+	mq, _ := MysqlConfig()
+	defer mq.Close()
+	mq.Where("username = ?", loginParms.Username).First(&user)
+
+	// 密码不匹配 直接抛出
+	if loginParms.Password != user.Password {
+		c.JSON(http.StatusOK, gin.H{
+			"code":  200,
+			"token": nil,
+		})
 	}
 
 	token, _ := jwtGenerateToken(&user, time.Hour*24*365)
 
 	//Todo This to judge authority
 	c.JSON(http.StatusOK, gin.H{
-		"t":     loginParms,
 		"code":  200,
 		"token": token,
 	})
